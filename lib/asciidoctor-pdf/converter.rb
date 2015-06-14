@@ -501,6 +501,13 @@ class Converter < ::Prawn::Document
       end
     end
 
+    # QUESTION should this key be prose_text_indent instead?
+    if (text_indent = @theme.paragraph_text_indent)
+      prose_opts[:indent_paragraphs] = text_indent
+      # Set :first_line_options to trigger use of our own text handler
+      prose_opts[:first_line_options] = {}
+    end
+
     # TODO check if we're within one line of the bottom of the page
     # and advance to the next page if so (similar to logic for section titles)
     layout_caption node.title if node.title?

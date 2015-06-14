@@ -368,12 +368,24 @@ module Extensions
     first_line_opts = opts.merge(first_line_opts).merge single_line: true
     box = ::Prawn::Text::Formatted::Box.new fragments, first_line_opts
     # NOTE get remaining_fragments before we add color to fragments on first line
-    remaining_fragments = box.render dry_run: true
+    if (text_indent = opts.delete :indent_paragraphs)
+      remaining_fragments = indent text_indent do
+        box.render dry_run: true
+      end
+    else
+      remaining_fragments = box.render dry_run: true
+    end
     # NOTE color must be applied per-fragment
     if first_line_color
       fragments.each {|fragment| fragment[:color] ||= first_line_color}
     end
-    fill_formatted_text_box fragments, first_line_opts
+    if text_indent
+      indent text_indent do
+        fill_formatted_text_box fragments, first_line_opts
+      end
+    else
+      fill_formatted_text_box fragments, first_line_opts
+    end
     unless remaining_fragments.empty?
       # NOTE color must be applied per-fragment
       if color
