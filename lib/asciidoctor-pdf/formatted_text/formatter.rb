@@ -21,6 +21,10 @@ class Formatter
       [text: string]
     end
   end
+
+  def array_paragraphs fragments
+    [fragments]
+  end
 end
 end
 end
